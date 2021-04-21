@@ -1,0 +1,24 @@
+{
+  "name": "eleventy-blog-guide",
+  "version": "1.0.0",
+  "description": "",
+  "main": "",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build":"eleventy --input=blog",
+    "serve":"eleventy --input=blog --serve"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cfjedimaster/eleventy-blog-guide.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/cfjedimaster/eleventy-blog-guide/issues"
+  },
+  "homepage": "https://github.com/cfjedimaster/eleventy-blog-guide#readme",
+  "dependencies": {
+    "@11ty/eleventy": "^0.12.1"
+  }
+}
