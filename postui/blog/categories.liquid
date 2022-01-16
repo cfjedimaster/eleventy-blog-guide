@@ -1,0 +1,19 @@
+---
+pagination:
+  data: collections.categories
+  size: 1
+  alias: category
+permalink: "/categories/{{ category | slug }}/index.html"
+layout: main
+eleventyComputed:
+  title: "Category: {{ category }}" 
+---
+
+{% assign posts = collections.post | filterByCategory: category %}
+{% for post in posts reversed %}
+<p>
+<a href="{{post.url}}">{{ post.data.title }}</a>, posted {{ post.date | niceDate }}<br/>
+{% excerpt post %}
+</p>
+{% endfor %}
+
