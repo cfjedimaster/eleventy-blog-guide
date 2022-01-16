@@ -1,4 +1,4 @@
-A Complete Guide to Building a Blog with Eleventy
+# A Complete Guide to Building a Blog with Eleventy
 
 For some time now I've been a fan of the [Eleventy](https://11ty.dev/) project. While Jamstack developers have many different options to choose from, Eleventy has struct me as one of the most easiest, and best of all, flexible, frameworks for building web site. There are multiple examples of building blogs with Eleventy, but I wanted to take a stab at covering everything in the process. This guide is written for the recently released 1.0 version of Eleventy. With that out of the way, let's get started!
 
@@ -95,7 +95,7 @@ module.exports = eleventyConfig => {
 
 Currently we just specify the input source directory. We'll add more to this later. Inside `blog`, create `index.liquid`. This will be our blog home page, but for now, you can literally just write "Hello World". Ensure everything is working by running `npx @11ty/eleventy` at the CLI and you should see very minimal output:
 
-
+![Output from running the Eleventy CLI](./images/cli1.png)
 
 Note that the version number (1.0.0) in the screenshot above may differ. 
 
@@ -107,7 +107,7 @@ Now for something that may be surprising. A majority of the work on creating an 
 
 To get past that, let's create five blog posts with temporary content. I'm writing this in January of 2022, so I'm going to create a `posts` folder, then `2022`, and then `1`. This follows the URL structure defined earlier. Each post will look like so:
 
-```
+```markup
 ---
 title: Alpha
 date: 2022-01-01
@@ -143,7 +143,6 @@ You should now have a blog folder that has:
 Now let's build out a few of the main content pages for our site, starting with updating the index.liquid file to include our posts. 
 
 ```html
-
 <h2>Blog Posts</h2>
 
 <ul>
@@ -157,6 +156,7 @@ I've added a simple header to the page (later on we'll start adding in the theme
 
 Since we're going to be doing some rapid iterating now, go ahead and use `npx @11ty/eleventy --serve` so you can quickly see the results in your browser. This runs Eleventy in a "server" mode that lets you view your site in your browser (typically at port 8080) and will (later on) automatically reload the browser as you edit. You should see something like this in your browser:
 
+![A list of blog posts](./images/home1.png)
 
 Go ahead and click those links and you'll see the text of the blog post. You need to use the back button to get back but that will get fixed once the theme is added.
 
