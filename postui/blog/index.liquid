@@ -1,0 +1,11 @@
+---
+title: My Blog
+layout: main
+---
+
+{% for post in collections.post reversed %}
+<p>
+<a href="{{post.url}}">{{ post.data.title }}</a>, posted {{ post.date | niceDate }}<br/>
+{% excerpt post %}
+</p>
+{% endfor %}
