@@ -1,0 +1,525 @@
+<h1 id="a-complete-guide-to-building-a-blog-with-eleventy">A Complete Guide to Building a Blog with Eleventy</h1>
+<p>For some time now I&#39;ve been a fan of the <a href="https://11ty.dev/">Eleventy</a> project. While Jamstack developers have many different options to choose from, Eleventy has struct me as one of the most easiest, and best of all, flexible, frameworks for building web site. There are multiple examples of building blogs with Eleventy, but I wanted to take a stab at covering everything in the process. This guide is written for the recently released 1.0 version of Eleventy. With that out of the way, let&#39;s get started!</p>
+<p>The complete source code for what we&#39;re building, and a copy of this article, may be found at the GitHub repo: <a href="https://github.com/cfjedimaster/eleventy-blog-guide">https://github.com/cfjedimaster/eleventy-blog-guide</a></p>
+<p>Please provide feedback at the repository!</p>
+<h2 id="prerequisites">Prerequisites</h2>
+<ul>
+<li>Node.js installed. You do not need to know Node.js. You simply need the SDK installed to provide you with npm. To reiterate, you do not need to be a Node.js developer. You can get the Node SDK for your system here: <a href="https://nodejs.org/en/">https://nodejs.org/en/</a></li>
+<li>You should have some knowledge of HTML, CSS, and JavaScript. You do not need to be an expert, just comfortable using them. In terms of HTML and CSS, Eleventy has zero impact on what you use and how you write your templates. It doesn&#39;t care. In terms of JavaScript, the same applies for what you build, but if you know a bit of JavaScript, Eleventy will be easier to configure and extend. Again, an introductory, cursory knowledge of the web stack is all you really need. If you need help with that, check <a href="https://developer.mozilla.org">MDN Web Docs</a></li>
+<li>A Git client if you want to get a copy of the repository, but you can also download the zip right from the <a href="https://github.com/cfjedimaster/eleventy-blog-guide">repository</a>.</li>
+<li>This guide is meant to help you build a blog with Eleventy. My assumption is that you already know the framework. But the good news is that, even if you don&#39;t, I believe you&#39;ll be able to follow along just fine. Eleventy is incredibly simple to use. If you&#39;ve <em>never</em> seen it though, I&#39;d take a quick look at the docs: <a href="https://www.11ty.dev/docs/">https://www.11ty.dev/docs/</a> </li>
+</ul>
+<p>And that&#39;s it. I assume you have an editor of some sort (if not, check out <a href="https://code.visualstudio.com">Visual Studio Code</a>, it&#39;s free!) but if not, Notepad or Text Edit is perfectly fine. (Bonus points if you use <code>ed</code> in your terminal!)</p>
+<h2 id="what-are-we-building-">What are we building?</h2>
+<p>Let&#39;s begin by first describing exactly what we&#39;re building. I think most developers have a good idea of what a blog is, but every blog is different. For this guide, I will support the following features:</p>
+<ul>
+<li>A home page that displays the last ten blog articles, newest on top. For each blog post, we display the title, date published, and an excerpt of the post.</li>
+<li>A page that displays the blog post. This will have the title, published date, a list of categories assigned to the post, and the contents of the post itself.</li>
+<li>Every blog post will have one or more categories assigned to it. Each category will have its own index page with a list of blog posts assigned to it. Each item in the list will have the title and date of the post, nothing more.</li>
+<li>An author page, basically, who is doing the writing?</li>
+<li>An archives page that lists every single blog post. This will use Eleventy&#39;s pagination system. Personally I&#39;m not a fan of these pages as I think user&#39;s rarely actually use them, but it&#39;s a common blog feature and Eleventy makes it rather easy.</li>
+<li>A set of category archive pages. The same idea as the main archives page, but unique per category.</li>
+<li>A RSS feed.</li>
+</ul>
+<p>Our blog will first be built out with no real design applied to it. It will have HTML of course, but will be bare bone with no theme. This will be covered in Part 1. Once we&#39;ve completed the functionality of the blog, we&#39;ll work on adding a theme to it. This will be covered in Part 2.</p>
+<h2 id="part-1-building-the-blog">Part 1 - Building the Blog</h2>
+<p>This portion of the guide focuses on the functionality of the blog itself. At the end of this part, you will have a completely functioning blog with no real design (theme) applied to it. </p>
+<h3 id="post-structure">Post structure</h3>
+<p>When you create a file in Eleventy, by default it will generate a permalink to that file. For our posts, we could create a <code>posts</code> folder and then just start writing Markdown. So for example, a-post-on-cats.md for our first post and then a-post-on-dogs.md for our second. If we used posts for the folder, we would then up with URLs like so:</p>
+<p><a href="https://mysite/posts/a-post-on-cats/">https://mysite/posts/a-post-on-cats/</a>
+<a href="https://mysite/posts/a-post-on-dogs/">https://mysite/posts/a-post-on-dogs/</a></p>
+<p>That&#39;s perfectly fine, but ask yourself what&#39;s going to happen a few years down the line when you have a hundred or more blog posts? Not every blog has that much content, but lets assume that&#39;s the case. Eventually you run into a problem with naming - you want to write <em>another</em> post on cats. Sure you can use a-post-on-cats-2.md, but even ignoring that, you&#39;re going to end up with a directory containing a lot of files. </p>
+<p>What I suggest, and what I&#39;ll do for this guide, is instead use a date based approach. For my own blog, I create a folder for the year, the month, and the day. For this guide, I&#39;ll make this slightly less complex and instead just use one for the year and month. </p>
+<p>Our folder structure will look like so: <code>/posts/2021/4</code>. If my cat post was in there, it would end up at <code>/posts/2021/4/a-post-about-cats.md</code> with a URL at <a href="https://mysite/posts/2021/4/a-post-about-cats">https://mysite/posts/2021/4/a-post-about-cats</a>. </p>
+<p>Obviously the permalink strategy and folder system you decide is very specific to what you think looks best. Just remember that Eleventy will support <em>any</em> system you pick. That being said, once you start writing and Google (and other engines) start indexing your content, you probably don&#39;t want to move things around. Figure it out - and stick with it.</p>
+<h3 id="post-metadata">Post Metadata</h3>
+<p>Above, I described our blog using categories and dates. You can go more complex. My own blog uses both categories and tags to group content together. Keeping it to just categories makes things a bit easier. While not an Eleventy concern, you want to try to keep to a consistent naming system. If you use &quot;JavaScript&quot; for one post, don&#39;t switch to &quot;JS&quot; for another. Along with categories and a title, every post will also have a published date. Having a date for a post is very important, especially on a technical blog, as it gives readers an idea of how out of date the content may be. </p>
+<h3 id="eleventy-setup">Eleventy setup</h3>
+<p>We&#39;ve got a few more things to decide on before we start building. First, Eleventy supports numerous template languages. You can even mix and match them. However, you should try to stick to one as much as possible. For my own blog I chose Liquid, mainly because it felt the most comfortable for me coming from Jekyll. I use EJS for one template. For this guide, we will use Liquid. Nothing in this guide would be impossible, or even difficult, in any of the other languages supported by Eleventy.</p>
+<p>Next, our folder structure will be slightly different than you may expect. Typically, an Eleventy project is all self-contained, by that I mean all the files work from within one main folder. You can then run <code>eleventy</code> from the command line to work with the current directory. </p>
+<p>For our project, we&#39;re going to use a single root directory which will contain any configuration we need for the blog, with actual content and other templates in a directory beneath it. If you want to get the completed code from the repository, you will find the initial version in the folder, <code>preui</code>, representing our completed blog with no theme applied. </p>
+<p>Finally, as I said in the prereqs, my assumption is that you&#39;ve at least been exposed to Eleventy. If you haven&#39;t, at least ensure you&#39;ve installed the CLI: <code>npm install -g @11ty/eleventy</code></p>
+<p>Alright, that was a heck of a lot of setup, let&#39;s get started!</p>
+<h3 id="initial-directories-and-files">Initial Directories and Files</h3>
+<p>If you&#39;ve cloned the repository and are just reading along, you can obviously skip this part. But if you&#39;re building from scratch, create a new root directory for the guide and then change into that directory. At the command line, initialize a new Node-related project with:</p>
+<pre><code class="language-bash">npm init -y</code></pre>
+<p>Next, install Eleventy as a dependency:</p>
+<pre><code class="language-bash">npm install --save-dev @11ty/eleventy </code></pre>
+<p>Make a <code>blog</code> directory and then a <code>.eleventy.js</code> file that for now only contains:</p>
+<pre><code class="language-js">module.exports = eleventyConfig =&gt; {
+
+    return {
+        dir: {
+            input: &#39;blog&#39;
+        }
+    }
+
+};
+</code></pre>
+<p>Currently we just specify the input source directory. We&#39;ll add more to this later. Inside <code>blog</code>, create <code>index.liquid</code>. This will be our blog home page, but for now, you can literally just write &quot;Hello World&quot;. Ensure everything is working by running <code>npx @11ty/eleventy</code> at the CLI and you should see very minimal output:</p>
+<p><img src="./images/cli1.png" alt="Output from running the Eleventy CLI"></p>
+<p>Note that the version number (1.0.0) in the screenshot above may differ. </p>
+<p>So far so good, right?</p>
+<h3 id="seed-data">Seed Data</h3>
+<p>Now for something that may be surprising. A majority of the work on creating an Eleventy blog is the initial setup, layout, and so forth. When done, you just write your content and publish. But we&#39;ve got a bit of a chicken and egg problem here where we can&#39;t really build out our blog without some content. </p>
+<p>To get past that, let&#39;s create five blog posts with temporary content. I&#39;m writing this in January of 2022, so I&#39;m going to create a <code>posts</code> folder, then <code>2022</code>, and then <code>1</code>. This follows the URL structure defined earlier. Each post will look like so:</p>
+<pre><code class="language-markup">---
+title: Alpha
+date: 2022-01-01
+categories: [&quot;javascript&quot;,&quot;cats&quot;]
+tags: post
+---
+
+Whatever sit in box human is in bath tub, emergency! drowning! meooowww!. Mmmmmmmmmeeeeeeeeooooooooowwwwwwww. Flop over kitty run to human with blood on mouth from frenzied attack on poor innocent mouse, don&#39;t i look cute?. Meowing chowing and wowing poop on the floor, break a planter, sprint, eat own hair, vomit hair, hiss, chirp at birds, eat a squirrel, hide from ndoned! meeooowwww!!! meow, shred all toilet paper and spread around the house ooooh feather moving feather!. There&#39;s a forty year old lady there let us feast. Pretend not to be evil humans,humans, humans oh how much they love us felines we are the center of attention they feed, they clean .
+
+Human is in bath tub, emergency! drowning! meooowww!. Leave fur on owners clothes i can haz purr when being pet hide at bottom of staircase to trip human and pretend you want to go out but then don&#39;t yet licplans. Shred all toilet paper and spread around the house. Plop down in the middle where everybody walks.
+
+Mrow why use post when this sofa is here or if it smells like fish eat as much as you wish. With tail in the air leave hair everywhere. Time to go zooooom. Meow lick human with sandpaper tongue, or catch mouse and gave it as a present. Fooled again thinking the dog likes me flex claws on the human&#39;s belly and purr like a lawnmower chew the plant purr like an angel. Sho lives with us.</code></pre>
+<p>On top, I defined my front matter including a title, date, categories, and tags. Except for the case of the tags properties, these are all arbitrary. In the GitHub repository you can see I followed a naming structure of alpha, beta, gamma, and so forth. I generated text from <a href="http://catipsum.com/">Cat Ipsum</a> which generates large blocks of cat text that I stripped down a bit. You can use whatever text you want of course, but you want at least:</p>
+<ul>
+<li>five or so posts…</li>
+<li>with different dates (so we can test sorting)</li>
+<li>and different titles, the text of the post isn&#39;t too important</li>
+<li>a few different categories so we can test category pages later</li>
+</ul>
+<p>Again, if you don&#39;t feel like typing this out, feel free to copy the samples from the repository. </p>
+<p>As I said, the <code>tags</code> value is not arbitrary as this is how we&#39;ll tell Eleventy to recognize our post content. By using the same value, we create an <a href="https://www.11ty.dev/docs/collections/">Eleventy collection</a> that we can use to display content.</p>
+<p>You should now have a blog folder that has:</p>
+<ul>
+<li>index.liquid</li>
+<li>posts/2022/1/ with five unique Markdown files</li>
+</ul>
+<h3 id="the-home-page">The Home Page</h3>
+<p>Now let&#39;s build out a few of the main content pages for our site, starting with updating the index.liquid file to include our posts. </p>
+<pre><code class="language-html">&lt;h2&gt;Blog Posts&lt;/h2&gt;
+
+&lt;ul&gt;
+{% for post in collections.post reversed %}
+&lt;li&gt;&lt;a href=&quot;{{post.url}}&quot;&gt;{{ post.data.title }}&lt;/a&gt; - {{ post.date }}&lt;/li&gt;
+{% endfor %}
+&lt;/ul&gt;</code></pre>
+<p>I&#39;ve added a simple header to the page (later on we&#39;ll start adding in the theme) and then I iterate over the posts. Because we used the same <code>tags</code> value for each, we should have five of them. By default Eleventy will sort the content in ascending order, but blogs typically show the most recent first. Adding <code>reversed</code> to the for loop handles that nicely. For each blog, we link to the <code>url</code> value (Eleventy provides this) and display the title. We also show the date which won&#39;t be pretty, but confirms the sorting is working. </p>
+<p>Since we&#39;re going to be doing some rapid iterating now, go ahead and use <code>npx @11ty/eleventy --serve</code> so you can quickly see the results in your browser. This runs Eleventy in a &quot;server&quot; mode that lets you view your site in your browser (typically at port 8080) and will (later on) automatically reload the browser as you edit. You should see something like this in your browser:</p>
+<p><img src="./images/home1.png" alt="A list of blog posts"></p>
+<p>Go ahead and click those links and you&#39;ll see the text of the blog post. You need to use the back button to get back but that will get fixed once the theme is added.</p>
+<p>While we plan to radically change the look of this page later, now would be a good time to add in a feature not natively supported by Eleventy, excerpts. An excerpt is simply a portion of a content that lets the reader get an idea about the rest of the post. It&#39;s fairly common for blogs to include excerpts on their home pages. </p>
+<p>To add this, we will make use of a <a href="https://www.11ty.dev/docs/shortcodes/">shortcode</a>. A shortcode lets you write a function that parses input content and returns - well anything you want. First, I&#39;ll modify the home page to use paragraphs and make use of a shortcode called excerpt:</p>
+<pre><code class="language-html">&lt;h2&gt;Blog Posts&lt;/h2&gt;
+
+{% for post in collections.post reversed %}
+&lt;p&gt;
+&lt;a href=&quot;{{post.url}}&quot;&gt;{{ post.data.title }}&lt;/a&gt; - {{ post.date }}&lt;br/&gt;
+{% excerpt post %}
+&lt;/p&gt;
+{% endfor %}</code></pre>
+<p>You can see the shortcode, <code>except</code> in use after the title and date. I&#39;m passing the entire post object to it. I then modify <code>.eleventy.js</code> to make use of it. As our configuration file is still a bit short, I&#39;ll include the entire thing:</p>
+<pre><code class="language-js">module.exports = eleventyConfig =&gt; {
+
+    eleventyConfig.addShortcode(&#39;excerpt&#39;, post =&gt; extractExcerpt(post));
+
+    function extractExcerpt(post) {
+        if(!post.templateContent) return &#39;&#39;;
+        if(post.templateContent.indexOf(&#39;&lt;/p&gt;&#39;) &gt; 0) {
+            let end = post.templateContent.indexOf(&#39;&lt;/p&gt;&#39;);
+            return post.templateContent.substr(0, end+4);
+        }
+        return post.templateContent;
+    }
+
+    return {
+        dir: {
+            input: &#39;blog&#39;
+        }
+    }
+
+};
+</code></pre>
+<p>The function makes use of <code>templateContent</code> which is the generated HTML from the blog post. I look for a closing paragraph and if found, return the first paragraph of text. The end result is is shown below:</p>
+<p><img src="./images/posts.png" alt="Posts with excerpts"></p>
+<p>Not terribly attractive, but getting there. At this point we have a home page and five (or more, depending on how many posts you built) pages. What do we have left to build? We still need an archives page, this will display all our posts with pagination. We need a categories page. This will be a dynamic set of pages based on our content categories. If we blog about cats and dogs, we should have one page that shows all the cat related content and one that displays blogs. Finally, we need an &quot;about&quot; page, our author page, that talks about us. That leaves off the RSS but we&#39;ll get to that.</p>
+<h3 id="the-archives-page">The Archives Page</h3>
+<p> We have two more main pages to build. Let&#39;s start with the archive. We&#39;ll call it archive.liquid.It&#39;s going to make use of Eleventy&#39;s powerful <a href="https://www.11ty.dev/docs/pagination/">pagination</a> feature. Create a new file, <code>archive.liquid</code>. Let&#39;s take a look at the template and then we can explain how it works.</p>
+<pre><code class="language-html">---
+pagination:
+  data: collections.post
+  size: 2
+  alias: posts
+  reverse: true
+---
+
+&lt;h2&gt;Post Archive&lt;/h2&gt;
+
+{% for post in posts %}
+&lt;p&gt;
+&lt;a href=&quot;{{post.url}}&quot;&gt;{{ post.data.title }}&lt;/a&gt; - {{ post.date }}&lt;br/&gt;
+{% excerpt post %}
+&lt;/p&gt;
+{% endfor %}
+
+&lt;p&gt;
+{% if pagination.href.previous %}
+&lt;a href=&quot; {{ pagination.href.previous }}&quot;&gt;Previous&lt;/a&gt;
+{% else %}
+Previous
+{% endif %} 
+/ 
+{% if pagination.href.next %}
+&lt;a href=&quot; {{ pagination.href.next }}&quot;&gt;Next&lt;/a&gt;
+{% else %}
+Next
+{% endif %}
+&lt;/p&gt;</code></pre>
+<p>On top, front matter is used to define the pagination logic for this template. In this case we are paginating over our post collection and using two posts per page. <em>This is not good for production!</em> But locally with our test of five or so posts, it works great. Typically you would want to use a higher number like 10 or so. The alias value simply gives us an easier way to refer to the data. Finally, we use the reverse keyword so that our newest posts come first.</p>
+<p>The next block of code iterates over the posts and uses the same style as the home page. You can use another style of course, perhaps just showing the titles. </p>
+<p>Finally, we add links to the previous and next pages, but only if they exist. The pagination values being used there are all provided by Eleventy. You can also number the pages as well. See the docs for some examples there. Once saved, open your browser up to <code>/archive</code> and you should see the first page of content:</p>
+<p><img src="./images/archives.png" alt="Archives"></p>
+<p>Remember that the page size of two is way too small to be helpful. Go ahead and change this to ten. You won&#39;t have pagination unless you build more blog posts, but you know the functionality works. </p>
+<h3 id="category-pages">Category Pages</h3>
+<p>Alright, now we come to a bit of an impasse. Luckily, Eleventy&#39;s flexibility will save us. We want to have a page that lists all the blog posts for a particular category. But we don&#39;t know what categories our blog will have. So we need N pages, one for each category, and inside there, a list of posts that match that category. </p>
+<p>I&#39;m going to describe our solution below, and then share an alternative we could have used as well. </p>
+<p>Our posts all contain a categories from matter. If you copied the source from GitHub, you&#39;ll have posts with categories: javascript, cats, and dogs. What we want is a list of <em>unique</em> categories that we can use later. To do so, we will use a feature of Eleventy to add a dynamic collection. The <a href="https://www.11ty.dev/docs/collections/">Collection</a> docs go into good detail about the different ways we can do this. For our needs, we need to look at our content and get a list of unique values. Here&#39;s how I built this:</p>
+<pre><code class="language-js">eleventyConfig.addCollection(&quot;categories&quot;, function(collectionApi) {
+    let categories = new Set();
+    let posts = collectionApi.getFilteredByTag(&#39;post&#39;);
+    posts.forEach(p =&gt; {
+        let cats = p.data.categories;
+        cats.forEach(c =&gt; categories.add(c));
+    });
+    return Array.from(categories);
+});</code></pre>
+<p>We begin by getting all templates that are posts. Remember we used the tag &quot;post&quot; for each of them. We loop over each one and get its categories. This will be one or more values. We then add these to a Set. This is a simple way to ensure we only add unique values to our list. At the end, we convert this back into an array and return it. </p>
+<p>The end result is an array of unique category names. Now we can use Eleventy&#39;s pagination feature. The following should be saved as <code>categories.liquid</code>:</p>
+<pre><code class="language-html">---
+pagination:
+  data: collections.categories
+  size: 1
+  alias: category
+permalink: &quot;/categories/{{ category | slug }}/index.html&quot;
+---
+
+&lt;h2&gt;Category: {{ category }}&lt;/h2&gt;
+
+{% assign posts = collections.post | filterByCategory: category %}
+{% for post in posts reversed %}
+&lt;p&gt;
+&lt;a href=&quot;{{post.url}}&quot;&gt;{{ post.data.title }}&lt;/a&gt; - {{ post.date }}&lt;br/&gt;
+{% excerpt post %}
+&lt;/p&gt;
+{% endfor %}</code></pre>
+<p>On top, we&#39;ve defined a pagination over categories with a size of one. This will make one page per category. We override Eleventy&#39;s permalink feature to specify a more descriptive URL. This will include the name of the category in the URL, passed through the <code>slug</code> filter to make it URL safe.</p>
+<p>Now we come into another problem! We need to list all posts that <em>include</em> this category. Once again, we can modify Eleventy to make this easier. Notice this line:</p>
+<pre><code class="language-liquid">{% assign posts = collections.post | filterByCategory: category %}</code></pre>
+<p>This translates to: Pass all of my posts to a filter named &quot;filterByCategory&quot; and pass an argument equal to the current category. Return that as a variable named posts.&quot; <a href="https://www.11ty.dev/docs/filters/">Eleventy Filters</a> are incredibly useful for custom logic like this. Here&#39;s the filter I wrote:</p>
+<pre><code class="language-js">eleventyConfig.addFilter(&quot;filterByCategory&quot;, function(posts, cat) {
+    /*
+    case matters, so let&#39;s lowercase the desired category, cat
+    and we will lowercase our posts categories
+    */
+    cat = cat.toLowerCase();
+    let result = posts.filter(p =&gt; {
+        let cats = p.data.categories.map(s =&gt; s.toLowerCase());
+        return cats.includes(cat);
+    });
+    return result;
+});
+</code></pre>
+<p>Essentially - loop over my posts and check its array of categories. See if my desired category is in there - and if so - include that in the result. Note the comments about casing. I used similar logic for my own blog and removing case from the logic made things work better. You <em>should</em> simply be consistent, but we&#39;re human and make mistakes. </p>
+<p>To ensure we&#39;re on the same page, here&#39;s the entire <code>.eleventy.js</code> now with our two new functions:</p>
+<pre><code class="language-js">module.exports = eleventyConfig =&gt; {
+
+    eleventyConfig.addShortcode(&#39;excerpt&#39;, post =&gt; extractExcerpt(post));
+
+    function extractExcerpt(post) {
+        if(!post.templateContent) return &#39;&#39;;
+        if(post.templateContent.indexOf(&#39;&lt;/p&gt;&#39;) &gt; 0) {
+            let end = post.templateContent.indexOf(&#39;&lt;/p&gt;&#39;);
+            return post.templateContent.substr(0, end+4);
+        }
+        return post.templateContent;
+    }
+
+    eleventyConfig.addCollection(&quot;categories&quot;, function(collectionApi) {
+        let categories = new Set();
+        let posts = collectionApi.getFilteredByTag(&#39;post&#39;);
+        posts.forEach(p =&gt; {
+            let cats = p.data.categories;
+            cats.forEach(c =&gt; categories.add(c));
+        });
+        return Array.from(categories);
+    });
+
+    eleventyConfig.addFilter(&quot;filterByCategory&quot;, function(posts, cat) {
+        /*
+        case matters, so let&#39;s lowercase the desired category, cat
+        and we will lowercase our posts categories
+        */
+        cat = cat.toLowerCase();
+        let result = posts.filter(p =&gt; {
+            let cats = p.data.categories.map(s =&gt; s.toLowerCase());
+            return cats.includes(cat);
+        });
+
+        return result;
+    });
+
+    return {
+        dir: {
+            input: &#39;blog&#39;
+        }
+    }
+
+};</code></pre>
+<p>A note - in my experience with Eleventy, I&#39;ve sometimes had issues with modifying <code>eleventy.js</code> while the server is running. When things go awry, I kill the command (CTRL or CMD C), and run it again. You may want to do so now. You should see, in the generated <code>_site</code> folder, a new <code>categories</code> folder with one folder per category:</p>
+<p><img src="./images/folders.png" alt="Folders"></p>
+<p>If you open your browser to one category, for example, <a href="http://localhost:8080/categories/cats">http://localhost:8080/categories/cats</a>, you should see posts that match that category.</p>
+<p><img src="./images/categories.png" alt="Category page example"></p>
+<h3 id="the-about-page">The About Page</h3>
+<p>For our last page, we&#39;ll do the simplest. Add a new page, <code>about.md</code>, and include the following:</p>
+<pre><code class="language-html">---
+title: About Me
+---
+
+This is me. I&#39;m you. Write about you. You are wonderful.</code></pre>
+<p>Ok, that&#39;s a bit short, but you get the idea. A blog should (almost always) share something about the creator. You can, and should, change that text to say something about yourself.</p>
+<h3 id="adding-rss">Adding RSS</h3>
+<p>We&#39;re almost done (at least before we make it pretty). The final bit of functionality for our blog is an RSS feed. RSS feeds have been an important part of blogs since blogging began. While RSS readers aren&#39;t as popular as they used to be, it&#39;s only going to take a few minutes to add this feature thanks to Eleventy&#39;s excellent plugin feature. The <a href="https://www.11ty.dev/docs/plugins/rss/">RSS plugin</a> plugin takes the hassle of generating XML by doing the grunt work for you. Per the docs, begin by installing it:</p>
+<pre><code class="language-bash">npm install @11ty/eleventy-plugin-rss --save-dev</code></pre>
+<p>Then, in your <code>.eleventy.js</code>, add this to the top:</p>
+<pre><code class="language-js">const pluginRss = require(&quot;@11ty/eleventy-plugin-rss&quot;);</code></pre>
+<p>Right after the <code>module.exports</code> line, add the plugin:</p>
+<pre><code class="language-js">eleventyConfig.addPlugin(pluginRss);</code></pre>
+<p>Our <code>.eleventy.js</code> is getting long, so here&#39;s just the top portion:</p>
+<pre><code class="language-js">const pluginRss = require(&quot;@11ty/eleventy-plugin-rss&quot;);
+
+module.exports = eleventyConfig =&gt; {
+
+    eleventyConfig.addPlugin(pluginRss);
+
+    eleventyConfig.addShortcode(&#39;excerpt&#39;, post =&gt; extractExcerpt(post));
+</code></pre>
+<p>Now we need to add the feed page itself. The plugin&#39;s documentation provides a Nunjucks file we can use. Previously we only used Liquid, and if we wanted to, we could convert their sample file, but why bother? Eleventy is totally fine with you mixing languages and while I don&#39;t normally recommend it, it makes perfect sense here. Their sample file mostly files but assumes a collection named <code>posts</code>, while our collection is <code>post</code>. I also modified the metadata on top a bit:</p>
+<pre><code class="language-html">---json
+{
+  &quot;permalink&quot;: &quot;feed.xml&quot;,
+  &quot;eleventyExcludeFromCollections&quot;: true,
+  &quot;metadata&quot;: {
+    &quot;title&quot;: &quot;My Blog&quot;,
+    &quot;subtitle&quot;: &quot;I am writing about stuff.&quot;,
+    &quot;url&quot;: &quot;https://example.com/&quot;,
+    &quot;feedUrl&quot;: &quot;https://example.com/feed.xml&quot;,
+    &quot;author&quot;: {
+      &quot;name&quot;: &quot;Your Name&quot;,
+      &quot;email&quot;: &quot;me@example.com&quot;
+    }
+  }
+}
+---
+&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;
+&lt;feed xmlns=&quot;http://www.w3.org/2005/Atom&quot;&gt;
+  &lt;title&gt;{{ metadata.title }}&lt;/title&gt;
+  &lt;subtitle&gt;{{ metadata.subtitle }}&lt;/subtitle&gt;
+  &lt;link href=&quot;{{ metadata.feedUrl }}&quot; rel=&quot;self&quot;/&gt;
+  &lt;link href=&quot;{{ metadata.url }}&quot;/&gt;
+  &lt;updated&gt;{{ collections.post | getNewestCollectionItemDate | dateToRfc3339 }}&lt;/updated&gt;
+  &lt;id&gt;{{ metadata.url }}&lt;/id&gt;
+  &lt;author&gt;
+    &lt;name&gt;{{ metadata.author.name }}&lt;/name&gt;
+    &lt;email&gt;{{ metadata.author.email }}&lt;/email&gt;
+  &lt;/author&gt;
+  {%- for post in collections.post | reverse %}
+  {% set absolutePostUrl %}{{ post.url | url | absoluteUrl(metadata.url) }}{% endset %}
+  &lt;entry&gt;
+    &lt;title&gt;{{ post.data.title }}&lt;/title&gt;
+    &lt;link href=&quot;{{ absolutePostUrl }}&quot;/&gt;
+    &lt;updated&gt;{{ post.date | dateToRfc3339 }}&lt;/updated&gt;
+    &lt;id&gt;{{ absolutePostUrl }}&lt;/id&gt;
+    &lt;content type=&quot;html&quot;&gt;{{ post.templateContent | htmlToAbsoluteUrls(absolutePostUrl) }}&lt;/content&gt;
+  &lt;/entry&gt;
+  {%- endfor %}
+&lt;/feed&gt;</code></pre>
+<p>And literally that&#39;s it. The plugin provided additional filters and functionality. We can confirm its working by going to <a href="http://localhost:8080/feed.xml">http://localhost:8080/feed.xml</a>:</p>
+<p><img src="./images/feed.png" alt="Feed XML"></p>
+<h3 id="recap">Recap</h3>
+<p>At this point, we have a fully functioning, if somewhat plain, blog. </p>
+<ul>
+<li>We&#39;ve got a home page with our most recent content. </li>
+<li>We&#39;ve got blog posts</li>
+<li>We&#39;ve got an archive of all our content, nicely paginated.</li>
+<li>We&#39;ve got category specific pages that organizes our content.</li>
+<li>We&#39;ve got a basic &quot;About Me&quot; type page.</li>
+<li>And we&#39;ve got an RSS feed.</li>
+</ul>
+<p>While there&#39;s definitely more we can do, it&#39;s time to put some lipstick on this page and add some UI!</p>
+<h2 id="part-two-adding-design">Part Two - Adding Design</h2>
+<p>Time to make our blog look halfway decent. There&#39;s an infinite amount of different themes we could use for the site, but we&#39;ll go with a very simple and basic design built on <a href="https://getbootstrap.com/">Bootstrap</a>. To give you an idea of what we will be doing, here&#39;s the new home page:</p>
+<p><img src="./images/blogui1.png" alt="Blog home page with new UI"></p>
+<p>And here&#39;s an example of a blog post:</p>
+<p><img src="./images/blogui2.png" alt="Blog post with new UI"></p>
+<p>Don&#39;t forget that the completed source code for this part may be found in the GitHub repository under the <code>postui</code> folder. Ready?</p>
+<h3 id="creating-the-main-layout">Creating the Main Layout</h3>
+<p>Eleventy&#39;s <a href="https://www.11ty.dev/docs/layouts/">layout</a> support lets you create templates that &#39;wrap&#39; other ones. This means the HTML result of a page using a layout will be inserted into the layout at a position you supply. Add a <code>_includes</code> directory under <code>blog</code>, and then add <code>main.liquid</code>:</p>
+<pre><code class="language-html">---
+title: Default title
+---
+
+&lt;!doctype html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+  &lt;head&gt;
+    &lt;!-- Required meta tags --&gt;
+    &lt;meta charset=&quot;utf-8&quot;&gt;
+    &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1&quot;&gt;
+
+    &lt;link href=&quot;https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css&quot; rel=&quot;stylesheet&quot; integrity=&quot;sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3&quot; crossorigin=&quot;anonymous&quot;&gt;
+    &lt;style&gt;
+    body {
+      margin: 50px;
+    }
+    &lt;/style&gt;
+
+    &lt;title&gt;{{ title }}&lt;/title&gt;
+  &lt;/head&gt;
+  &lt;body&gt;
+
+    &lt;nav class=&quot;navbar navbar-expand-lg navbar-dark bg-dark mb-4&quot;&gt;
+      &lt;div class=&quot;container-fluid&quot;&gt;
+        &lt;button class=&quot;navbar-toggler&quot; type=&quot;button&quot; data-bs-toggle=&quot;collapse&quot; data-bs-target=&quot;#navbarSupportedContent&quot; aria-controls=&quot;navbarSupportedContent&quot; aria-expanded=&quot;false&quot; aria-label=&quot;Toggle navigation&quot;&gt;
+          &lt;span class=&quot;navbar-toggler-icon&quot;&gt;&lt;/span&gt;
+        &lt;/button&gt;
+        &lt;div class=&quot;collapse navbar-collapse&quot; id=&quot;navbarSupportedContent&quot;&gt;
+          &lt;ul class=&quot;navbar-nav me-auto mb-2 mb-lg-0&quot;&gt;
+            &lt;li class=&quot;nav-item&quot;&gt;
+              &lt;a 
+                {% if page.url == &quot;/&quot; %}
+                class=&quot;nav-link active&quot; aria-current=&quot;page&quot;
+                {% else %}
+                class=&quot;nav-link&quot;
+                {% endif %} href=&quot;/&quot;&gt;Home&lt;/a&gt;
+            &lt;/li&gt;
+            &lt;li class=&quot;nav-item&quot;&gt;
+              &lt;a 
+                {% if page.url == &quot;/about/&quot; %}
+                class=&quot;nav-link active&quot; aria-current=&quot;page&quot;
+                {% else %}
+                class=&quot;nav-link&quot;
+                {% endif %}
+              href=&quot;/about&quot;&gt;About&lt;/a&gt;
+            &lt;/li&gt;
+            &lt;li class=&quot;nav-item&quot;&gt;
+              &lt;a 
+                {% if page.url == &quot;/archive/&quot; %}
+                class=&quot;nav-link active&quot; aria-current=&quot;page&quot;
+                {% else %}
+                class=&quot;nav-link&quot;
+                {% endif %}
+              href=&quot;/archive&quot;&gt;Archives&lt;/a&gt;
+            &lt;/li&gt;
+          &lt;/ul&gt; 
+        &lt;/div&gt;
+      &lt;/div&gt;
+    &lt;/nav&gt;
+
+    &lt;h1&gt;{{ title }}&lt;/h1&gt;
+
+      {{ content }}
+
+    &lt;script src=&quot;https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js&quot; integrity=&quot;sha384-QJHtvGhmr9XOIpI6YVutG+2QOK9T+ZnN4kzFN1RtK3zEFEIsxhlmWl5/YESvpZ13&quot; crossorigin=&quot;anonymous&quot;&gt;&lt;/script&gt;
+  &lt;/body&gt;
+&lt;/html&gt;</code></pre>
+<p>Most of this is boilerplate Bootstrap, but there&#39;s a few important bits to note. First, notice the front matter on top. A title is specified here that will (or should) be replaced by the title of pages using this layout. If we ever forget to set a title, we&#39;ll see the default and know we need to change it. Note the use of the title variable inside the title tags. </p>
+<p>Scrolling down a bit, you can see the navigation links. For each one, we use a bit of Liquid logic to determine what page we&#39;re on. Eleventy provides the current location in the <code>page.url</code> variable, so we simply check that for each of our three main links. This lets us &#39;highlight&#39; in the nav to mark our current page. </p>
+<p>Finally, notice the main content consists of our title again and the special variable, <code>content</code>. Eleventy provides this to the template and it will contain the including template&#39;s content. Note that with the title being reproduced in the h1 tags, we will remove the similar layout we had in our child templates. </p>
+<p>To start using the layout, we add it to our front matter. Here&#39;s an updated index.liquid:</p>
+<pre><code class="language-html">---
+title: My Blog
+layout: main
+---
+
+{% for post in collections.post reversed %}
+&lt;p&gt;
+&lt;a href=&quot;{{post.url}}&quot;&gt;{{ post.data.title }}&lt;/a&gt;, posted {{ post.date }}&lt;br/&gt;
+{% excerpt post %}
+&lt;/p&gt;
+{% endfor %}</code></pre>
+<p>Reload your Eleventy server and you&#39;ll now see the home page has the new layout. The dates are still a bit ugly, so let&#39;s fix this. Back in <code>.eleventy.js</code>, add a new filter:</p>
+<pre><code class="language-js">const english = new Intl.DateTimeFormat(&#39;en&#39;);
+eleventyConfig.addFilter(&quot;niceDate&quot;, function(d) {
+    return english.format(d);
+});</code></pre>
+<p>This makes simple use of the <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl">Intl</a> spec, a super easy way to localize web content using standards built into your browser and Node. I&#39;ve kept it to American formats and didn&#39;t modify the display, but we can now add it to the home page:</p>
+<pre><code class="language-html">&lt;a href=&quot;{{post.url}}&quot;&gt;{{ post.data.title }}&lt;/a&gt;, posted {{ post.date | niceDate }}&lt;br/&gt;</code></pre>
+<p>Reload and you&#39;ll see the nicer dates! Now let&#39;s keep at it. Next, update <code>about.md</code> to use the layout:</p>
+<pre><code class="language-html">---
+title: About Me
+layout: main
+---
+
+This is me. I&#39;m you. Write about you. You are wonderful.</code></pre>
+<p>Now do <code>archive.liquid</code>:</p>
+<pre><code class="language-html">---
+pagination:
+  data: collections.post
+  size: 10
+  alias: posts
+  reverse: true
+title: Post Archive
+layout: main
+---
+
+{% for post in posts %}
+&lt;p&gt;
+&lt;a href=&quot;{{post.url}}&quot;&gt;{{ post.data.title }}&lt;/a&gt;, posted {{ post.date | niceDate }}&lt;br/&gt;
+{% excerpt post %}
+&lt;/p&gt;
+{% endfor %}
+
+&lt;p&gt;
+{% if pagination.href.previous %}
+&lt;a href=&quot; {{ pagination.href.previous }}&quot;&gt;Previous&lt;/a&gt;
+{% else %}
+Previous
+{% endif %} 
+/ 
+{% if pagination.href.next %}
+&lt;a href=&quot; {{ pagination.href.next }}&quot;&gt;Next&lt;/a&gt;
+{% else %}
+Next
+{% endif %}
+&lt;/p&gt;</code></pre>
+<p>The only real change here is the use of the <code>layout</code> value in the front matter and the date filter. A similar change is done to <code>categories.liquid</code>:</p>
+<pre><code class="language-html">---
+pagination:
+  data: collections.categories
+  size: 1
+  alias: category
+permalink: &quot;/categories/{{ category | slug }}/index.html&quot;
+layout: main
+eleventyComputed:
+  title: &quot;Category: {{ category }}&quot; 
+---
+
+{% assign posts = collections.post | filterByCategory: category %}
+{% for post in posts reversed %}
+&lt;p&gt;
+&lt;a href=&quot;{{post.url}}&quot;&gt;{{ post.data.title }}&lt;/a&gt;, posted {{ post.date | niceDate }}&lt;br/&gt;
+{% excerpt post %}
+&lt;/p&gt;
+{% endfor %}</code></pre>
+<p>Again, just the front matter change and then the addition of the <code>niceDate</code> filter. Congratulations, you&#39;ve already made most of the site look nicer! The last thing to do our posts. Since posts are a bit special, it makes sense to give them their own layout. Eleventy supports layout chaining which means we can have one layout include another. In the <code>_includes</code> folder, add a new layout named <code>posts.liquid</code>:</p>
+<pre><code class="language-html">---
+layout: main
+---
+
+&lt;p&gt;
+    &lt;strong&gt;Posted: &lt;/strong&gt; {{ date | niceDate }}&lt;br/&gt;
+    &lt;strong&gt;Categories:&lt;/strong&gt;
+    {% for cat in categories %}
+    &lt;a href=&quot;/categories/{{ cat | slug }}&quot;&gt;{{ cat }}&lt;/a&gt;{% unless forloop.last %}, {% endunless %}
+    {% endfor %}
+&lt;/p&gt;
+
+{{ content }}</code></pre>
+<p>First - notice how this layout calls the <code>main</code> layout. This is how chaining works. Once our posts make use of this template, it will execute, and then pass on it&#39;s contents to the main layout. For our posts, we&#39;re going to print the date of the post on top, as well as the categories. We loop over them and use a bit of Liquid magic (<code>forloop.last</code>) to make the list nicely comma separated. Also note we link to the dynamic category pages we created. This lets readers explore other content in the same category.</p>
+<h2 id="what-s-next-">What&#39;s Next?</h2>
+<p>Todo: talk about stuff missing (search, contact)
+Talk about deployment</p>
+
