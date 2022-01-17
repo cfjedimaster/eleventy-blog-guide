@@ -202,6 +202,7 @@ module.exports = eleventyConfig => {
 
 The function makes use of `templateContent` which is the generated HTML from the blog post. I look for a closing paragraph and if found, return the first paragraph of text. The end result is is shown below:
 
+![Posts with excerpts](./images/posts.png)
 
 Not terribly attractive, but getting there. At this point we have a home page and five (or more, depending on how many posts you built) pages. What do we have left to build? We still need an archives page, this will display all our posts with pagination. We need a categories page. This will be a dynamic set of pages based on our content categories. If we blog about cats and dogs, we should have one page that shows all the cat related content and one that displays blogs. Finally, we need an "about" page, our author page, that talks about us. That leaves off the RSS but we'll get to that.
 
@@ -248,6 +249,7 @@ The next block of code iterates over the posts and uses the same style as the ho
 
 Finally, we add links to the previous and next pages, but only if they exist. The pagination values being used there are all provided by Eleventy. You can also number the pages as well. See the docs for some examples there. Once saved, open your browser up to `/archive` and you should see the first page of content:
 
+![Archives](./images/archives.png)
 
 Remember that the page size of two is way too small to be helpful. Go ahead and change this to ten. You won't have pagination unless you build more blog posts, but you know the functionality works. 
 
@@ -301,7 +303,6 @@ Now we come into another problem! We need to list all posts that *include* this 
 
 ```liquid
 {% assign posts = collections.post | filterByCategory: category %}
-
 ```
 
 This translates to: Pass all of my posts to a filter named "filterByCategory" and pass an argument equal to the current category. Return that as a variable named posts." [Eleventy Filters](https://www.11ty.dev/docs/filters/) are incredibly useful for custom logic like this. Here's the filter I wrote:
@@ -375,9 +376,11 @@ module.exports = eleventyConfig => {
 
 A note - in my experience with Eleventy, I've sometimes had issues with modifying `eleventy.js` while the server is running. When things go awry, I kill the command (CTRL or CMD C), and run it again. You may want to do so now. You should see, in the generated `_site` folder, a new `categories` folder with one folder per category:
 
-
+![Folders](./images/folders.png)
 
 If you open your browser to one category, for example, http://localhost:8080/categories/cats, you should see posts that match that category.
+
+![Category page example](./images/categories.png)
 
 ### The About Page
 
@@ -427,7 +430,7 @@ module.exports = eleventyConfig => {
 
 Now we need to add the feed page itself. The plugin's documentation provides a Nunjucks file we can use. Previously we only used Liquid, and if we wanted to, we could convert their sample file, but why bother? Eleventy is totally fine with you mixing languages and while I don't normally recommend it, it makes perfect sense here. Their sample file mostly files but assumes a collection named `posts`, while our collection is `post`. I also modified the metadata on top a bit:
 
-```nunjucks
+```html
 ---json
 {
   "permalink": "feed.xml",
@@ -471,7 +474,7 @@ Now we need to add the feed page itself. The plugin's documentation provides a N
 
 And literally that's it. The plugin provided additional filters and functionality. We can confirm its working by going to http://localhost:8080/feed.xml:
 
-
+![Feed XML](./images/feed.png)
 
 ### Recap
 
@@ -490,10 +493,11 @@ While there's definitely more we can do, it's time to put some lipstick on this 
 
 Time to make our blog look halfway decent. There's an infinite amount of different themes we could use for the site, but we'll go with a very simple and basic design built on [Bootstrap](https://getbootstrap.com/). To give you an idea of what we will be doing, here's the new home page:
 
-
+![Blog home page with new UI](./images/blogui1.png)
 
 And here's an example of a blog post:
 
+![Blog post with new UI](./images/blogui2.png)
 
 Don't forget that the completed source code for this part may be found in the GitHub repository under the `postui` folder. Ready?
 
@@ -578,7 +582,7 @@ Finally, notice the main content consists of our title again and the special var
 
 To start using the layout, we add it to our front matter. Here's an updated index.liquid:
 
-```markup
+```html
 ---
 title: My Blog
 layout: main
@@ -602,12 +606,12 @@ eleventyConfig.addFilter("niceDate", function(d) {
 ```
 This makes simple use of the [Intl](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl) spec, a super easy way to localize web content using standards built into your browser and Node. I've kept it to American formats and didn't modify the display, but we can now add it to the home page:
 
-```markup
+```html
 <a href="{{post.url}}">{{ post.data.title }}</a>, posted {{ post.date | niceDate }}<br/>
 ```
 Reload and you'll see the nicer dates! Now let's keep at it. Next, update `about.md` to use the layout:
 
-```markup
+```html
 ---
 title: About Me
 layout: main
@@ -618,7 +622,7 @@ This is me. I'm you. Write about you. You are wonderful.
 
 Now do `archive.liquid`:
 
-```markup
+```html
 ---
 pagination:
   data: collections.post
@@ -653,7 +657,7 @@ Next
 
 The only real change here is the use of the `layout` value in the front matter and the date filter. A similar change is done to `categories.liquid`:
 
-```markup
+```html
 ---
 pagination:
   data: collections.categories
@@ -676,7 +680,7 @@ eleventyComputed:
 
 Again, just the front matter change and then the addition of the `niceDate` filter. Congratulations, you've already made most of the site look nicer! The last thing to do our posts. Since posts are a bit special, it makes sense to give them their own layout. Eleventy supports layout chaining which means we can have one layout include another. In the `_includes` folder, add a new layout named `posts.liquid`:
 
-```markup
+```html
 ---
 layout: main
 ---
