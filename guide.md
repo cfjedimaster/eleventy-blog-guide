@@ -37,8 +37,8 @@ This portion of the guide focuses on the functionality of the blog itself. At th
 
 When you create a file in Eleventy, by default it will generate a permalink to that file. For our posts, we could create a `posts` folder and then just start writing Markdown. So for example, a-post-on-cats.md for our first post and then a-post-on-dogs.md for our second. If we used posts for the folder, we would then up with URLs like so:
 
-https://mysite/posts/a-post-on-cats/
-https://mysite/posts/a-post-on-dogs/
+  https://mysite/posts/a-post-on-cats/
+  https://mysite/posts/a-post-on-dogs/
 
 That's perfectly fine, but ask yourself what's going to happen a few years down the line when you have a hundred or more blog posts? Not every blog has that much content, but lets assume that's the case. Eventually you run into a problem with naming - you want to write *another* post on cats. Sure you can use a-post-on-cats-2.md, but even ignoring that, you're going to end up with a directory containing a lot of files. 
 
@@ -710,7 +710,11 @@ Now all our posts will automatically use the right layout.
 
 ## What's Next?
 
-Todo: talk about stuff missing (search, contact)
-Talk about deployment
+Congratulations! You now have a fully working, if simple, blog in Eleventy. There's more we could add:
+
+* Your blog could have a search engine. There's multiple different ways of adding search to the Jamstack, including [Lunr](https://lunrjs.com/) and [Algolia](https://lunrjs.com/).
+* You should typically provide a way for people to contact you. The "About" page would be fine for that, but you could also add a simple form. There's *numerous* services out there for the Jamstack that make it easy to process forms.
+* Finally, you probably want to get your blog deployed to the internet. The 11ty docs have a [list of articles](https://www.11ty.dev/docs/tutorials/#put-it-on-the-web) related to this.
+
 
 
