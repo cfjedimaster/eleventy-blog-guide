@@ -127,7 +127,7 @@ Mrow why use post when this sofa is here or if it smells like fish eat as much a
 &lt;/p&gt;
 {% endfor %}
 </code></pre>
-<p>You can see the shortcode, <code>except</code> in use after the title and date. I'm passing the entire post object to it. I then modify <code>.eleventy.js</code> to make use of it. As our configuration file is still a bit short, I'll include the entire thing:</p>
+<p>You can see the shortcode, <code>excerpt</code> in use after the title and date. I'm passing the entire post object to it. I then modify <code>.eleventy.js</code> to make use of it. As our configuration file is still a bit short, I'll include the entire thing:</p>
 <pre><code class="language-js">module.exports = eleventyConfig =&gt; {
 
 	eleventyConfig.addShortcode('excerpt', post =&gt; extractExcerpt(post));
@@ -194,7 +194,7 @@ Next
 <h3>Category Pages</h3>
 <p>Alright, now we come to a bit of an impasse. Luckily, Eleventy's flexibility will save us. We want to have a page that lists all the blog posts for a particular category. But we don't know what categories our blog will have. So we need N pages, one for each category, and inside there, a list of posts that match that category.</p>
 <p>I'm going to describe our solution below, and then share an alternative we could have used as well.</p>
-<p>Our posts all contain a categories from matter. If you copied the source from GitHub, you'll have posts with categories: javascript, cats, and dogs. What we want is a list of <em>unique</em> categories that we can use later. To do so, we will use a feature of Eleventy to add a dynamic collection. The <a href="https://www.11ty.dev/docs/collections/">Collection</a> docs go into good detail about the different ways we can do this. For our needs, we need to look at our content and get a list of unique values. Here's how I built this:</p>
+<p>Our posts all contain a categories front matter. If you copied the source from GitHub, you'll have posts with categories: javascript, cats, and dogs. What we want is a list of <em>unique</em> categories that we can use later. To do so, we will use a feature of Eleventy to add a dynamic collection. The <a href="https://www.11ty.dev/docs/collections/">Collection</a> docs go into good detail about the different ways we can do this. For our needs, we need to look at our content and get a list of unique values. Here's how I built this:</p>
 <pre><code class="language-js">eleventyConfig.addCollection(&quot;categories&quot;, function(collectionApi) {
 	let categories = new Set();
 	let posts = collectionApi.getFilteredByTag('post');
@@ -365,7 +365,7 @@ module.exports = eleventyConfig =&gt; {
   {%- endfor %}
 &lt;/feed&gt;
 </code></pre>
-<p>And literally that's it. The plugin provided additional filters and functionality. We can confirm its working by going to http://localhost:8080/feed.xml:</p>
+<p>This should be saved as <code>feed.njk</code>. The plugin provided additional filters and functionality. We can confirm its working by going to http://localhost:8080/feed.xml:</p>
 <p><img src="./images/feed.png" alt="Feed XML"></p>
 <h3>Recap</h3>
 <p>At this point, we have a fully functioning, if somewhat plain, blog.</p>
@@ -539,7 +539,7 @@ eleventyComputed:
 &lt;/p&gt;
 {% endfor %}
 </code></pre>
-<p>Again, just the front matter change and then the addition of the <code>niceDate</code> filter. Congratulations, you've already made most of the site look nicer! The last thing to do our posts. Since posts are a bit special, it makes sense to give them their own layout. Eleventy supports layout chaining which means we can have one layout include another. In the <code>_includes</code> folder, add a new layout named <code>posts.liquid</code>:</p>
+<p>Again, just the front matter change and then the addition of the <code>niceDate</code> filter. Congratulations, you've already made most of the site look nicer! The last thing to do our posts. Since posts are a bit special, it makes sense to give them their own layout. Eleventy supports layout chaining which means we can have one layout include another. In the <code>_includes</code> folder, add a new layout named <code>post.liquid</code>:</p>
 <pre><code class="language-html">---
 layout: main
 ---

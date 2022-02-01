@@ -174,7 +174,7 @@ To add this, we will make use of a [shortcode](https://www.11ty.dev/docs/shortco
 </p>
 {% endfor %}
 ```
-You can see the shortcode, `except` in use after the title and date. I'm passing the entire post object to it. I then modify `.eleventy.js` to make use of it. As our configuration file is still a bit short, I'll include the entire thing:
+You can see the shortcode, `excerpt` in use after the title and date. I'm passing the entire post object to it. I then modify `.eleventy.js` to make use of it. As our configuration file is still a bit short, I'll include the entire thing:
 
 ```js
 module.exports = eleventyConfig => {
@@ -259,7 +259,7 @@ Alright, now we come to a bit of an impasse. Luckily, Eleventy's flexibility wil
 
 I'm going to describe our solution below, and then share an alternative we could have used as well. 
 
-Our posts all contain a categories from matter. If you copied the source from GitHub, you'll have posts with categories: javascript, cats, and dogs. What we want is a list of *unique* categories that we can use later. To do so, we will use a feature of Eleventy to add a dynamic collection. The [Collection](https://www.11ty.dev/docs/collections/) docs go into good detail about the different ways we can do this. For our needs, we need to look at our content and get a list of unique values. Here's how I built this:
+Our posts all contain a categories front matter. If you copied the source from GitHub, you'll have posts with categories: javascript, cats, and dogs. What we want is a list of *unique* categories that we can use later. To do so, we will use a feature of Eleventy to add a dynamic collection. The [Collection](https://www.11ty.dev/docs/collections/) docs go into good detail about the different ways we can do this. For our needs, we need to look at our content and get a list of unique values. Here's how I built this:
 
 ```js
 eleventyConfig.addCollection("categories", function(collectionApi) {
@@ -472,7 +472,7 @@ Now we need to add the feed page itself. The plugin's documentation provides a N
 </feed>
 ```
 
-And literally that's it. The plugin provided additional filters and functionality. We can confirm its working by going to http://localhost:8080/feed.xml:
+This should be saved as `feed.njk`. The plugin provided additional filters and functionality. We can confirm its working by going to http://localhost:8080/feed.xml:
 
 ![Feed XML](./images/feed.png)
 
@@ -678,7 +678,7 @@ eleventyComputed:
 {% endfor %}
 ```
 
-Again, just the front matter change and then the addition of the `niceDate` filter. Congratulations, you've already made most of the site look nicer! The last thing to do our posts. Since posts are a bit special, it makes sense to give them their own layout. Eleventy supports layout chaining which means we can have one layout include another. In the `_includes` folder, add a new layout named `posts.liquid`:
+Again, just the front matter change and then the addition of the `niceDate` filter. Congratulations, you've already made most of the site look nicer! The last thing to do our posts. Since posts are a bit special, it makes sense to give them their own layout. Eleventy supports layout chaining which means we can have one layout include another. In the `_includes` folder, add a new layout named `post.liquid`:
 
 ```html
 ---
