@@ -6,7 +6,7 @@ layout: main
 	<strong>Posted: </strong> {{ date | niceDate }}<br/>
 	<strong>Categories:</strong>
 	{% for cat in categories %}
-	<a href="/categories/{{ cat | slug }}">{{ cat }}</a>{% unless forloop.last %}, {% endunless %}
+	<a href="/categories/{{ cat | slugify }}">{{ cat }}</a>{% unless forloop.last %}, {% endunless %}
 	{% endfor %}
 </p>
 

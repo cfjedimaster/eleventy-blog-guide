@@ -3,7 +3,7 @@ pagination:
   data: collections.categories
   size: 1
   alias: category
-permalink: "/categories/{{ category | slug }}/index.html"
+permalink: "/categories/{{ category | slugify }}/index.html"
 ---
 
 <h2>Category: {{ category }}</h2>

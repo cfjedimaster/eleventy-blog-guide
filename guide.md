@@ -283,7 +283,7 @@ pagination:
   data: collections.categories
   size: 1
   alias: category
-permalink: "/categories/{{ category | slug }}/index.html"
+permalink: "/categories/{{ category | slugify }}/index.html"
 ---
 
 <h2>Category: {{ category }}</h2>
@@ -297,7 +297,7 @@ permalink: "/categories/{{ category | slug }}/index.html"
 {% endfor %}
 ```
 
-On top, we've defined a pagination over categories with a size of one. This will make one page per category. We override Eleventy's permalink feature to specify a more descriptive URL. This will include the name of the category in the URL, passed through the `slug` filter to make it URL safe.
+On top, we've defined a pagination over categories with a size of one. This will make one page per category. We override Eleventy's permalink feature to specify a more descriptive URL. This will include the name of the category in the URL, passed through the `slugify` filter to make it URL safe.
 
 Now we come into another problem! We need to list all posts that *include* this category. Once again, we can modify Eleventy to make this easier. Notice this line:
 
@@ -663,7 +663,7 @@ pagination:
   data: collections.categories
   size: 1
   alias: category
-permalink: "/categories/{{ category | slug }}/index.html"
+permalink: "/categories/{{ category | slugify }}/index.html"
 layout: main
 eleventyComputed:
   title: "Category: {{ category }}" 
@@ -689,7 +689,7 @@ layout: main
 	<strong>Posted: </strong> {{ date | niceDate }}<br/>
 	<strong>Categories:</strong>
 	{% for cat in categories %}
-	<a href="/categories/{{ cat | slug }}">{{ cat }}</a>{% unless forloop.last %}, {% endunless %}
+	<a href="/categories/{{ cat | slugify }}">{{ cat }}</a>{% unless forloop.last %}, {% endunless %}
 	{% endfor %}
 </p>
 

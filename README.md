@@ -9,3 +9,4 @@ I'm calling this a "complete" guide as it walks you through all the steps to bui
 ### Updates
 
 **August 8, 2022**: Typo fix. Thank you to David M for the find.
+**August 8, 2022**: Change `slug` to `slugify`. Thank you to David M for the find.
