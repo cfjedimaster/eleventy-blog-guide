@@ -204,7 +204,7 @@ The function makes use of `templateContent` which is the generated HTML from the
 
 ![Posts with excerpts](./images/posts.png)
 
-Not terribly attractive, but getting there. At this point we have a home page and five (or more, depending on how many posts you built) pages. What do we have left to build? We still need an archives page, this will display all our posts with pagination. We need a categories page. This will be a dynamic set of pages based on our content categories. If we blog about cats and dogs, we should have one page that shows all the cat related content and one that displays blogs. Finally, we need an "about" page, our author page, that talks about us. That leaves off the RSS but we'll get to that.
+Not terribly attractive, but getting there. At this point we have a home page and five (or more, depending on how many posts you built) pages. What do we have left to build? We still need an archives page, this will display all our posts with pagination. We need a categories page. This will be a dynamic set of pages based on our content categories. If we blog about cats and dogs, we should have one page that shows all the cat related content and one that displays dogs. Finally, we need an "about" page, our author page, that talks about us. That leaves off the RSS but we'll get to that.
 
 ### The Archives Page
 
