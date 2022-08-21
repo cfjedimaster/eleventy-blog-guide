@@ -712,7 +712,7 @@ Now all our posts will automatically use the right layout.
 
 Congratulations! You now have a fully working, if simple, blog in Eleventy. There's more we could add:
 
-* Your blog could have a search engine. There's multiple different ways of adding search to the Jamstack, including [Lunr](https://lunrjs.com/) and [Algolia](https://lunrjs.com/).
+* Your blog could have a search engine. There's multiple different ways of adding search to the Jamstack, including [Lunr](https://lunrjs.com/) and [Algolia](https://algolia.com/).
 * You should typically provide a way for people to contact you. The "About" page would be fine for that, but you could also add a simple form. There's *numerous* services out there for the Jamstack that make it easy to process forms.
 * Finally, you probably want to get your blog deployed to the internet. The 11ty docs have a [list of articles](https://www.11ty.dev/docs/tutorials/#put-it-on-the-web) related to this.
 
