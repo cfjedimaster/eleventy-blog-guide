@@ -39,10 +39,12 @@ module.exports = eleventyConfig => {
 		return result;
 	});
 
-	const english = new Intl.DateTimeFormat('en');
+	const english = new Intl.DateTimeFormat("en");
 	eleventyConfig.addFilter("niceDate", function(d) {
 		return english.format(d);
 	});
+
+	eleventyConfig.addPassthroughCopy("blog/images/*");
 
 	return {
 		dir: {

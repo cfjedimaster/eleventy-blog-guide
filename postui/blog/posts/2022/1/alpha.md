@@ -9,4 +9,6 @@ Whatever sit in box human is in bath tub, emergency! drowning! meooowww!. Mmmmmm
 
 Human is in bath tub, emergency! drowning! meooowww!. Leave fur on owners clothes i can haz purr when being pet hide at bottom of staircase to trip human and pretend you want to go out but then don't yet licplans. Shred all toilet paper and spread around the house. Plop down in the middle where everybody walks.
 
+![Cat picture](/images/cat.jpg)
+
 Mrow why use post when this sofa is here or if it smells like fish eat as much as you wish. With tail in the air leave hair everywhere. Time to go zooooom. Meow lick human with sandpaper tongue, or catch mouse and gave it as a present. Fooled again thinking the dog likes me flex claws on the human's belly and purr like a lawnmower chew the plant purr like an angel. Sho lives with us.

@@ -2,7 +2,7 @@
 
 For some time now I've been a fan of the [Eleventy](https://11ty.dev/) project. While Jamstack developers have many different options to choose from, Eleventy has struck me as one of the most easiest, and best of all, flexible, frameworks for building web site. There are multiple examples of building blogs with Eleventy, but I wanted to take a stab at covering everything in the process. This guide is written for the recently released 1.0 version of Eleventy. With that out of the way, let's get started!
 
-The complete source code for what we're building, and a copy of this article, may be found at the GitHub repo: <https://github.com/cfjedimaster/eleventy-blog-guide>. The code, and guide, were last updated on February 25, 2023. Please provide feedback at the repository!
+The complete source code for what we're building, and a copy of this article, may be found at the GitHub repo: <https://github.com/cfjedimaster/eleventy-blog-guide>. The code, and guide, were last updated on February 28, 2023. Please provide feedback at the repository!
 
 ## Prerequisites
 
@@ -596,7 +596,7 @@ layout: main
 Reload your Eleventy server and you'll now see the home page has the new layout. The dates are still a bit ugly, so let's fix this. Back in `.eleventy.js`, add a new filter:
 
 ```js
-const english = new Intl.DateTimeFormat('en');
+const english = new Intl.DateTimeFormat("en");
 eleventyConfig.addFilter("niceDate", function(d) {
 	return english.format(d);
 });
@@ -675,7 +675,11 @@ eleventyComputed:
 {% endfor %}
 ```
 
-Again, just the front matter change and then the addition of the `niceDate` filter. Congratulations, you've already made most of the site look nicer! The last thing to do our posts. Since posts are a bit special, it makes sense to give them their own layout. Eleventy supports layout chaining which means we can have one layout include another. In the `_includes` folder, add a new layout named `post.liquid`:
+Again, just the front matter change and then the addition of the `niceDate` filter. Congratulations, you've already made most of the site look nicer! 
+
+### Creating the Post Layout
+
+The next thing to do is our posts. Since posts are a bit special, it makes sense to give them their own layout. Eleventy supports layout chaining which means we can have one layout include another. In the `_includes` folder, add a new layout named `post.liquid`:
 
 ```html
 ---
@@ -705,6 +709,38 @@ Now we have one last problem. Typically you enable layouts in the front matter o
 
 Now all our posts will automatically use the right layout. 
 
+### Adding Images (and Other Assets)
+
+Our design made use of Bootstrap's CDN support, which meant both the CSS and JavaScript were loaded externally. Many times though a blog will have local CSS, JavaScript files, and typically images. Eleventy needs to be told how to handle that, so let's take a look at what exactly that means. 
+
+First, add an `images` folder under the `blog` directory. In that folder, put any image you want. If you grabbed the files from the repository, you will find one named `cat.jpg`. This photo is from [Manja Vitolic](https://unsplash.com/@madhatterzone?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText).
+
+Now let's add it to a post. Open up any post, for example, `posts/2022/1/alpha.md`. We're going to add an image in the Markdown like so:
+
+```
+Human is in bath tub, emergency! drowning! meooowww!. Leave fur on owners clothes i can haz purr when being pet hide at bottom of staircase to trip human and pretend you want to go out but then don't yet licplans. Shred all toilet paper and spread around the house. Plop down in the middle where everybody walks.
+
+![Cat picture](/images/cat.jpg)
+
+Mrow why use post when this sofa is here or if it smells like fish eat as much as you wish. With tail in the air leave hair everywhere. Time to go zooooom. Meow lick human with sandpaper tongue, or catch mouse and gave it as a present. Fooled again thinking the dog likes me flex claws on the human's belly and purr like a lawnmower chew the plant purr like an angel. Sho lives with us.
+```
+
+If you run your Eleventy blog, you'll notice that it didn't work:
+
+![Broken image](./images/brokenimage.png)
+
+If you look into the output directory, `_site`, you can see why - the `images`` folder was never copied. Eleventy doesn't "process" images (and CSS or JavaScript) by default, and therefore will ignore these files. Luckily it's easy to correct in our configuration by using the [Passthrough File Copy](https://www.11ty.dev/docs/copy/) feature. This lets you tell Eleventy folders and files that should be copied to the built site. 
+
+Open up `.eleventy.js`, and before the final return, add the following:
+
+```js
+eleventyConfig.addPassthroughCopy("blog/images/*");
+```
+
+A "glob" pattern is used here to specify any file under `blog/images`. You could add multiple `addPassthroughCopy` configurations to your site to grab other assets, like CSS or JavaScript, or put *all* of your assets in one main directory and specify that instead. As always, Eleventy is very flexible. If you view your post again, you'll now see the image!
+
+![Corrected image](/images/goodimage.png)
+
 ## What's Next?
 
 Congratulations! You now have a fully working, if simple, blog in Eleventy. There's more we could add:
@@ -712,6 +748,3 @@ Congratulations! You now have a fully working, if simple, blog in Eleventy. Ther
 * Your blog could have a search engine. There are multiple different ways of adding search to the Jamstack, including [Lunr](https://lunrjs.com/) and [Algolia](https://algolia.com/).
 * You should typically provide a way for people to contact you. The "About" page would be fine for that, but you could also add a simple form. There are _numerous_ services out there for the Jamstack that make it easy to process forms.
 * Finally, you probably want to get your blog deployed to the internet. The 11ty docs have a [list of articles](https://www.11ty.dev/docs/tutorials/#put-it-on-the-web) related to this.
-
-
-
