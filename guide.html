@@ -3,6 +3,7 @@
 <link href="assets/prism.css" rel="stylesheet">
 <link href="assets/guide.css" rel="stylesheet">
 <script src="assets/prism.js"></script>
+<title>A Complete Guide to Building a Blog with Eleventy</title>
 </head>
 
 <body>
@@ -578,7 +579,7 @@ Mrow why use post when this sofa is here or if it smells like fish eat as much a
 <pre><code class="language-js">eleventyConfig.addPassthroughCopy(&quot;blog/images/*&quot;);
 </code></pre>
 <p>A &quot;glob&quot; pattern is used here to specify any file under <code>blog/images</code>. You could add multiple <code>addPassthroughCopy</code> configurations to your site to grab other assets, like CSS or JavaScript, or put <em>all</em> of your assets in one main directory and specify that instead. As always, Eleventy is very flexible. If you view your post again, you'll now see the image!</p>
-<p><img src="/images/goodimage.png" alt="Corrected image"></p>
+<p><img src="./images/goodimage.png" alt="Corrected image"></p>
 <h2>What's Next?</h2>
 <p>Congratulations! You now have a fully working, if simple, blog in Eleventy. There's more we could add:</p>
 <ul>

@@ -739,7 +739,7 @@ eleventyConfig.addPassthroughCopy("blog/images/*");
 
 A "glob" pattern is used here to specify any file under `blog/images`. You could add multiple `addPassthroughCopy` configurations to your site to grab other assets, like CSS or JavaScript, or put *all* of your assets in one main directory and specify that instead. As always, Eleventy is very flexible. If you view your post again, you'll now see the image!
 
-![Corrected image](/images/goodimage.png)
+![Corrected image](./images/goodimage.png)
 
 ## What's Next?
 
