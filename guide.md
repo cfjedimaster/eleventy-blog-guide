@@ -2,7 +2,7 @@
 
 For some time now I've been a fan of the [Eleventy](https://11ty.dev/) project. While Jamstack developers have many different options to choose from, Eleventy has struck me as one of the most easiest, and best of all, flexible, frameworks for building web site. There are multiple examples of building blogs with Eleventy, but I wanted to take a stab at covering everything in the process. This guide is written for the recently released 1.0 version of Eleventy. With that out of the way, let's get started!
 
-The complete source code for what we're building, and a copy of this article, may be found at the GitHub repo: <https://github.com/cfjedimaster/eleventy-blog-guide>. The code, and guide, were last updated on February 28, 2023. Please provide feedback at the repository!
+The complete source code for what we're building, and a copy of this article, may be found at the GitHub repo: <https://github.com/cfjedimaster/eleventy-blog-guide>. The code, and guide, were last updated on March 4, 2023. Please provide feedback at the repository!
 
 ## Prerequisites
 

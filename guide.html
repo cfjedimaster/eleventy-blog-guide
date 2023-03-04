@@ -10,7 +10,7 @@
 
 <h1>A Complete Guide to Building a Blog with Eleventy</h1>
 <p>For some time now I've been a fan of the <a href="https://11ty.dev/">Eleventy</a> project. While Jamstack developers have many different options to choose from, Eleventy has struck me as one of the most easiest, and best of all, flexible, frameworks for building web site. There are multiple examples of building blogs with Eleventy, but I wanted to take a stab at covering everything in the process. This guide is written for the recently released 1.0 version of Eleventy. With that out of the way, let's get started!</p>
-<p>The complete source code for what we're building, and a copy of this article, may be found at the GitHub repo: <a href="https://github.com/cfjedimaster/eleventy-blog-guide">https://github.com/cfjedimaster/eleventy-blog-guide</a>. The code, and guide, were last updated on February 28, 2023. Please provide feedback at the repository!</p>
+<p>The complete source code for what we're building, and a copy of this article, may be found at the GitHub repo: <a href="https://github.com/cfjedimaster/eleventy-blog-guide">https://github.com/cfjedimaster/eleventy-blog-guide</a>. The code, and guide, were last updated on March 4, 2023. Please provide feedback at the repository!</p>
 <h2>Prerequisites</h2>
 <ul>
 <li>Node.js installed. You do not need to know Node.js. You simply need the SDK installed to provide you with npm. To reiterate, you do not need to be a Node.js developer. You can get the Node SDK for your system here: <a href="https://nodejs.org/en/">https://nodejs.org/en/</a></li>
@@ -556,7 +556,7 @@ layout: main
 {{ content }}
 </code></pre>
 <p>First - notice how this layout calls the <code>main</code> layout. This is how chaining works. Once our posts make use of this template, it will execute, and then pass on its contents to the main layout. For our posts, we're going to print the date of the post on top, as well as the categories. We loop over them and use a bit of Liquid magic (<code>forloop.last</code>) to make the list nicely comma separated. Also, note we link to the dynamic category pages we created. This lets readers explore other content in the same category.</p>
-<p>Now we have one last problem. Typically you enable layouts in the front matter of each file. We have five posts and it wouldn't take long to add them. But Eleventy provides an even simpler way. By using a <a href="https://www.11ty.dev/docs/data-template-dir/">directory data file</a>, we can specify data for a folder as a whole. This is done by adding a file with the same name as the directory and ending with <code>11tydata.json</code>. So for example, we can add <code>blog\posts\posts.</code>11tydata.json`. The contents of this file will be applied to everything beneath it. Here's then how we can set the layout:</p>
+<p>Now we have one last problem. Typically you enable layouts in the front matter of each file. We have five posts and it wouldn't take long to add them. But Eleventy provides an even simpler way. By using a <a href="https://www.11ty.dev/docs/data-template-dir/">directory data file</a>, we can specify data for a folder as a whole. This is done by adding a file with the same name as the directory and ending with <code>11tydata.json</code>. So for example, we can add <code>blog\posts\posts.11tydata.json</code>. The contents of this file will be applied to everything beneath it. Here's then how we can set the layout:</p>
 <pre><code class="language-json">{
 	&quot;layout&quot;:&quot;post&quot;
 }

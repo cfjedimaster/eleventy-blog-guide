@@ -7,6 +7,8 @@ https://cfjedimaster.github.io/eleventy-blog-guide/guide
 I'm calling this a "complete" guide as it walks you through all the steps to build a blog, but obviously, it doesn't cover every possible feature. I'm absolutely open to PRs and issues, but please keep the intent in mind - helping someone who has just learned Eleventy how to create a working blog. 
 
 ### Updates
+**March 4, 2023**: Took in PR from John Wargo to fix a typo.
+
 **March 1, 2023**: Added a title tag to the guide wrapper HTML. Fixed broken image. 
 
 **February 28, 2023**: Added a section header for post layout. Added a section about handling assets and passthroughcopy.
