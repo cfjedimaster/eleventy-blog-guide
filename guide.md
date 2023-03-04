@@ -699,7 +699,7 @@ layout: main
 
 First - notice how this layout calls the `main` layout. This is how chaining works. Once our posts make use of this template, it will execute, and then pass on its contents to the main layout. For our posts, we're going to print the date of the post on top, as well as the categories. We loop over them and use a bit of Liquid magic (`forloop.last`) to make the list nicely comma separated. Also, note we link to the dynamic category pages we created. This lets readers explore other content in the same category.
 
-Now we have one last problem. Typically you enable layouts in the front matter of each file. We have five posts and it wouldn't take long to add them. But Eleventy provides an even simpler way. By using a [directory data file](https://www.11ty.dev/docs/data-template-dir/), we can specify data for a folder as a whole. This is done by adding a file with the same name as the directory and ending with `11tydata.json`. So for example, we can add `blog\posts\posts.`11tydata.json`. The contents of this file will be applied to everything beneath it. Here's then how we can set the layout:
+Now we have one last problem. Typically you enable layouts in the front matter of each file. We have five posts and it wouldn't take long to add them. But Eleventy provides an even simpler way. By using a [directory data file](https://www.11ty.dev/docs/data-template-dir/), we can specify data for a folder as a whole. This is done by adding a file with the same name as the directory and ending with `11tydata.json`. So for example, we can add `blog\posts\posts.11tydata.json`. The contents of this file will be applied to everything beneath it. Here's then how we can set the layout:
 
 ```json
 {
